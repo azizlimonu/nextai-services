@@ -17,7 +17,6 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import FreeCounter from "./freeCounter";
 
-
 const poppins = Montserrat({ weight: '600', subsets: ['latin'] });
 
 const routes = [

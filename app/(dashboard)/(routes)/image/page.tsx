@@ -62,10 +62,12 @@ const ImagePage = () => {
 
       const response = await axios.post('/api/image', values);
 
+      console.log("response", response);
       // get all the image.url
       const urls = response.data.map(
         (image: { url: string }) => image.url
       );
+      console.log("URL image", urls);
 
       setPhotos(urls);
       form.reset();

@@ -1,12 +1,13 @@
 import Stripe from "stripe";
 import { headers } from 'next/headers';
 import { NextResponse } from "next/server";
+
 import prismadb from "@/lib/prismadb";
 import { stripe } from "@/lib/stripe";
 
 export async function POST(req: Request) {
-  const body = await req.text();
-  const signature = headers().get("Stripe-Signature") as string;
+  const body = await req.text()
+  const signature = headers().get("Stripe-Signature") as string
 
   let event: Stripe.Event
 
@@ -17,7 +18,6 @@ export async function POST(req: Request) {
       process.env.STRIPE_WEBHOOK_SECRET || ""
     )
   } catch (error: any) {
-    console.log("STRIPE WEBHOOK ERROR", error);
     return new NextResponse(`Webhook Error = ${error.message}`, {
       status: 400
     });
@@ -28,12 +28,10 @@ export async function POST(req: Request) {
   if (event.type === "checkout.session.completed") {
     const subscription = await stripe.subscriptions.retrieve(
       session.subscription as string
-    );
+    )
 
     if (!session?.metadata?.userId) {
-      return new NextResponse("Unauthorized ,User id is required", {
-        status: 400
-      });
+      return new NextResponse("User id is required", { status: 400 });
     }
 
     await prismadb.userSubscription.create({
@@ -45,7 +43,7 @@ export async function POST(req: Request) {
         stripeCurrentPeriodEnd: new Date(
           subscription.current_period_end * 1000
         ),
-      }
+      },
     })
   }
 
