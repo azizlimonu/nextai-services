@@ -67,6 +67,7 @@ const ImagePage = () => {
       const urls = response.data.map(
         (image: { url: string }) => image.url
       );
+
       console.log("URL image", urls);
 
       setPhotos(urls);
@@ -204,12 +205,12 @@ const ImagePage = () => {
           <div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-8"
           >
-            {photos?.map((photo, idx) => (
+            {photos.map((photo, idx) => (
               <Card key={idx}>
                 <div className="relative aspect-square">
                   <Image
                     fill
-                    alt={`image_${idx}`}
+                    alt="generated photo"
                     src={photo}
                   />
                 </div>
