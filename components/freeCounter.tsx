@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import { Zap } from "lucide-react";
 
+import { useProModal } from "@/hooks/use-pro-modal";
 import { MAX_FREE_COUNTS } from "@/constants/count";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
-import { useProModal } from "@/hooks/use-pro-modal";
 import { Progress } from "./ui/progress";
 
 interface FreeCounterProps {
