@@ -1,7 +1,8 @@
 import Replicate from "replicate";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
-import { checkApiLimit, incrementApiLimit } from "@/lib/api-limit";
+
+import { incrementApiLimit, checkApiLimit } from "@/lib/api-limit";
 import { checkSubscription } from "@/lib/subscription";
 
 const replicate = new Replicate({
@@ -31,10 +32,6 @@ export async function POST(
       return new NextResponse("Free trial has expired. Please upgrade to pro.", { status: 403 });
     }
 
-    if (!isPro) {
-      await incrementApiLimit();
-    }
-
     const response = await replicate.run(
       "anotherjesse/zeroscope-v2-xl:71996d331e8ede8ef7bd76eba9fae076d31792e4ddf4ad057779b443d6aea62f",
       {
@@ -44,9 +41,13 @@ export async function POST(
       }
     );
 
+    if (!isPro) {
+      await incrementApiLimit();
+    }
+
     return NextResponse.json(response);
   } catch (error) {
-    console.log('[VIDEO_ERROR]', error);
+    console.log('VIDEO_ERROR', error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 };
