@@ -5,6 +5,7 @@ import { Settings } from "lucide-react";
 
 const SettingsPage = async () => {
   const isPro = await checkSubscription();
+  console.log("YOUR CURRENTLY", isPro)
 
   return (
     <div>

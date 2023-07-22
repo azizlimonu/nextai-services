@@ -13,30 +13,28 @@ export async function GET() {
     const user = await currentUser();
 
     if (!userId || !user) {
-      return new NextResponse("Unauthorized, please login first", {
-        status: 401
-      });
+      return new NextResponse("Unauthorized, Please Login", { status: 401 });
     }
 
     const userSubscription = await prismadb.userSubscription.findUnique({
       where: {
         userId
       }
-    });
+    })
 
     if (userSubscription && userSubscription.stripeCustomerId) {
       const stripeSession = await stripe.billingPortal.sessions.create({
         customer: userSubscription.stripeCustomerId,
         return_url: settingsUrl,
-      });
+      })
 
-      return new NextResponse(JSON.stringify({ url: stripeSession.url }));
+      return new NextResponse(JSON.stringify({ url: stripeSession.url }))
     }
 
     const stripeSession = await stripe.checkout.sessions.create({
       success_url: settingsUrl,
       cancel_url: settingsUrl,
-      payment_method_types: ['card'],
+      payment_method_types: ["card"],
       mode: "subscription",
       billing_address_collection: "auto",
       customer_email: user.emailAddresses[0].emailAddress,
@@ -45,10 +43,9 @@ export async function GET() {
           price_data: {
             currency: "USD",
             product_data: {
-              name: "AI Services Pro",
-              description: "Unlimited Generate AI"
+              name: "AI Services",
+              description: "Unlimited AI Generations"
             },
-            // 10 usd / month
             unit_amount: 1000,
             recurring: {
               interval: "month"
@@ -61,9 +58,10 @@ export async function GET() {
         userId,
       },
     })
-    return new NextResponse(JSON.stringify({ url: stripeSession.url }));
+
+    return new NextResponse(JSON.stringify({ url: stripeSession.url }))
   } catch (error) {
-    console.log("STRIPE ERROR", error);
+    console.log("[STRIPE_ERROR]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 };
