@@ -18,6 +18,7 @@ const FreeCounter = ({
   isPro = false,
   apiLimitCount = 0,
 }: FreeCounterProps) => {
+  console.log("")
 
   const [mounted, setMounted] = useState(false);
   const proModal = useProModal();

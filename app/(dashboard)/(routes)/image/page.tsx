@@ -62,24 +62,15 @@ const ImagePage = () => {
 
       const response = await axios.post('/api/image', values);
 
-      console.log("response", response);
-      // get all the image.url
-      const urls = response.data.map(
-        (image: { url: string }) => image.url
-      );
-
-      console.log("URL image", urls);
+      const urls = response.data.map((image: { url: string }) => image.url);
 
       setPhotos(urls);
-      form.reset();
-      console.log("OK")
     } catch (error: any) {
       if (error?.response?.status === 403) {
         proModal.onOpen();
       } else {
         toast.error("Something went wrong.");
       }
-      console.log("ERROR")
     } finally {
       router.refresh();
     }
@@ -205,21 +196,17 @@ const ImagePage = () => {
           <div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-8"
           >
-            {photos.map((photo, idx) => (
-              <Card key={idx}>
+            {photos.map((photo,idx) => (
+              <Card key={idx} className="rounded-lg overflow-hidden">
                 <div className="relative aspect-square">
                   <Image
                     fill
-                    alt="generated photo"
+                    alt="Generated"
                     src={photo}
                   />
                 </div>
-
                 <CardFooter className="p-2">
-                  <Button
-                    onClick={() => window.open(photo)} variant="secondary"
-                    className="w-full"
-                  >
+                  <Button onClick={() => window.open(photo)} variant="secondary" className="w-full">
                     <Download className="h-4 w-4 mr-2" />
                     Download
                   </Button>
